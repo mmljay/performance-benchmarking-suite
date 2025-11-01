@@ -1,0 +1,82 @@
+pipeline {
+    agent any
+
+    environment {
+        JMETER_HOME = "${WORKSPACE}/jmeter"
+    }
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                echo '📥 Checking out code from GitHub...'
+                checkout scm
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                echo '⚙️ Setting up environment...'
+                sh '''
+                if ! command -v jmeter >/dev/null 2>&1; then
+                    echo "Installing JMeter..."
+                    brew install jmeter || sudo apt-get install jmeter -y
+                fi
+                mkdir -p jmeter/results jmeter/reports
+                '''
+            }
+        }
+
+        stage('Run Smoke Test') {
+            steps {
+                echo '🧪 Running Smoke Test...'
+                sh '''
+                chmod +x scripts/run_smoke.sh
+                ./scripts/run_smoke.sh
+                '''
+            }
+        }
+
+        stage('Publish Smoke Test Report') {
+            steps {
+                echo '📊 Publishing Smoke Test HTML Report...'
+                publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true,
+                    reportDir: 'jmeter/reports/smoke_test_report',
+                    reportFiles: 'index.html',
+                    reportName: 'Smoke Test Report'])
+            }
+        }
+
+        stage('Run Baseline Test') {
+            steps {
+                echo '🚀 Running Baseline Performance Test...'
+                sh '''
+                chmod +x scripts/run_baseline.sh
+                ./scripts/run_baseline.sh
+                '''
+            }
+        }
+
+        stage('Publish Baseline Test Report') {
+            steps {
+                echo '📈 Publishing Baseline Test HTML Report...'
+                publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true,
+                    reportDir: 'jmeter/reports/baseline_test_report',
+                    reportFiles: 'index.html',
+                    reportName: 'Baseline Performance Report'])
+            }
+        }
+    }
+
+    post {
+        always {
+            echo '🧹 Cleaning up workspace...'
+            sh 'rm -rf jmeter/results/*.jtl || true'
+        }
+        success {
+            echo '✅ Performance Benchmarking Suite executed successfully!'
+        }
+        failure {
+            echo '❌ Build failed — check logs and JMeter reports for details.'
+        }
+    }
+}
