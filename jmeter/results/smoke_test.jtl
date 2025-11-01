@@ -1,0 +1,2 @@
+timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
+1762011936467,197,GET Users API,200,OK,Smoke Thread Group 1-1,text,true,,6871,135,1,1,https://jsonplaceholder.typicode.com/users,194,0,177
