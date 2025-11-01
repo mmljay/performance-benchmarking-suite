@@ -22,28 +22,32 @@ This project provides a structured, reusable setup for running both **Smoke** an
 
 performance-benchmarking-suite/
 │
-├── jmeter/
-│ ├── plans/ # Test plans (.jmx)
-│ │ ├── smoke_test.jmx
-│ │ └── baseline_test.jmx
-│ ├── results/ # .jtl raw results
-│ ├── reports/ # HTML dashboards
-│ └── data/ # CSV input files (e.g., user data)
+├── jmeter/                              # Core JMeter testing assets
+│   ├── plans/                           # Test plan definitions (.jmx)
+│   │   ├── smoke_test.jmx               # Quick sanity test for API uptime
+│   │   └── baseline_test.jmx            # Performance baseline under moderate load
+│   │
+│   ├── results/                         # Raw JMeter .jtl output files
+│   ├── reports/                         # Auto-generated HTML performance dashboards
+│   └── data/                            # Input CSVs (e.g., test users, payloads)
 │
-├── scripts/
-│ ├── run_smoke.sh
-│ ├── run_baseline.sh
-│ └── compare_baseline.sh
+├── scripts/                             # CLI automation scripts
+│   ├── run_smoke.sh                     # Runs smoke test and generates report
+│   ├── run_baseline.sh                  # Executes baseline load test
+│   └── compare_baseline.sh              # (Optional) Compares two baseline runs for drift
 │
-├── docs/
-│ ├── SLA_profile.md
-│ ├── baseline_methodology.md
-│ └── report_readme.md
+├── docs/                                # Documentation and QA process assets
+│   ├── SLA_profile.md                   # SLA definitions and thresholds
+│   ├── baseline_methodology.md          # Baseline creation methodology
+│   ├── report_readme.md                 # Report interpretation guide
+│   ├── smoke_dashboard_preview.png      # Screenshot of smoke test report
+│   └── baseline_dashboard_preview.png   # Screenshot of baseline report
 │
-├── ci/
-│ └── Jenkinsfile
+├── ci/                                  # CI/CD integration files
+│   └── Jenkinsfile                      # Jenkins pipeline automation
 │
-└── README.md
+└── README.md                            # Main project overview and setup instructions
+
 
 
 ---
